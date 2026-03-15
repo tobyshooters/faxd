@@ -13,12 +13,35 @@ body {
   color: #111;
 }
 
-header { margin: 1.5rem 0rem; }
-h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
-h2 { font-size: 1.1rem; margin-bottom: 0.75rem; margin-top: 1.5rem; }
-h2:first-child { margin-top: 0; }
+header {
+  margin: 1.5rem 0rem;
+}
 
-nav { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+h2:first-child {
+  margin-top: 0;
+}
+
+nav {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+hr {
+  margin: 2rem 0rem;
+  border: 1px dashed lightgrey;
+}
 
 .tab {
   background: #e0e0e0;
@@ -28,30 +51,55 @@ nav { display: flex; gap: 0.25rem; flex-wrap: wrap; }
   font-family: monospace;
   font-size: 0.85rem;
 }
-.tab.active { background: #111; color: #fff; }
 
-.page { display: none; }
-.page.active { display: block; }
+.tab.active {
+  background: #111;
+  color: #fff;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
 
 .card {
   border: 1px solid #ccc;
   padding: 1rem;
   background: #fff;
+  margin-bottom: 0.5rem;
 }
-.card { margin-bottom: 0.5rem; }
-.card p { margin: 0.3rem 0; }
+
+.card p {
+  margin: 0.3rem 0;
+}
 
 table {
-    width: max-content;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-    margin-left: 50%;
-    transform: translateX(-50%);
+  width: max-content;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
-th, td { text-align: left; padding: 0.4rem; border-bottom: 1px solid #ddd; }
-th { background: #eee; }
 
-ul { list-style: none; margin-bottom: 0.5rem; }
+th,
+td {
+  text-align: left;
+  padding: 0.4rem;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background: #eee;
+}
+
+ul {
+  list-style: none;
+  margin-bottom: 0.5rem;
+}
+
 ul li {
   display: flex;
   justify-content: space-between;
@@ -59,6 +107,7 @@ ul li {
   padding: 0.3rem 0;
   border-bottom: 1px solid #eee;
 }
+
 ul li button {
   background: none;
   border: none;
@@ -67,13 +116,17 @@ ul li button {
   font-family: monospace;
 }
 
-.row { display: flex; gap: 0.5rem; }
+.row {
+  display: flex;
+  gap: 0.5rem;
+}
 
 label {
   display: block;
   margin-bottom: 0.6rem;
   font-size: 0.85rem;
 }
+
 label input {
   display: block;
   width: 100%;
@@ -82,6 +135,7 @@ label input {
   font-family: monospace;
   border: 1px solid #ccc;
 }
+
 label.checkbox input {
   display: inline;
   width: auto;
@@ -95,7 +149,10 @@ button {
   border: 1px solid #ccc;
   background: #fff;
 }
-button:hover { background: #eee; }
+
+button:hover {
+  background: #eee;
+}
 
 form button[type="submit"] {
   margin-top: 0.5rem;
@@ -123,4 +180,7 @@ form button[type="submit"] {
   border: 1px solid #ccc;
 }
 
-#send-status { margin-top: 0.5rem; font-size: 0.85rem; }
+#send-status {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}

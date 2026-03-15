@@ -23,3 +23,6 @@ sub-statements with good variable names.
 
 Do not be too verbose. Prefer short variable names to long ones. Do not repeat
 prefixes when they can be infered from the context.
+
+For CSS files, write one property per line.
+Our goal is legibility and simplicity, not unnecessary terseness.
