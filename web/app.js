@@ -2,15 +2,16 @@ const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 
 // tabs
-let activeTab = location.hash.slice(1) || "dashboard";
+let activeTab = location.hash.slice(1) || "home";
 
 function switchTab(tab) {
   $$(".tab").forEach(b => b.classList.remove("active"));
   $$(".page").forEach(p => p.classList.remove("active"));
+  const page = $("#" + tab);
+  if (!page) return;
   const btn = $(`.tab[data-tab="${tab}"]`);
-  if (!btn) return;
-  btn.classList.add("active");
-  $("#" + tab).classList.add("active");
+  if (btn) btn.classList.add("active");
+  page.classList.add("active");
   activeTab = tab;
   location.hash = tab;
   load(tab);
@@ -20,11 +21,12 @@ $$(".tab").forEach(btn => {
   btn.addEventListener("click", () => switchTab(btn.dataset.tab));
 });
 
+$("#logo").addEventListener("click", () => switchTab("home"));
+
 switchTab(activeTab);
 
 function load(tab) {
-  if (tab === "dashboard") loadStatus();
-  if (tab === "log") loadLog();
+  if (tab === "home") { loadStatus(); loadLog(); }
   if (tab === "settings") loadSettings();
 }
 
@@ -35,11 +37,10 @@ async function api(path, opts) {
 
 // auto-refresh every 3s
 setInterval(() => {
-  if (activeTab === "dashboard") loadStatus();
-  if (activeTab === "log") loadLog();
+  if (activeTab === "home") { loadStatus(); loadLog(); }
 }, 3000);
 
-// dashboard
+// home
 async function loadStatus() {
   const s = await api("status");
   $("#d-running").textContent = s.running ? "running" : "stopped";

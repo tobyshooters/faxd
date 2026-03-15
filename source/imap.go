@@ -39,6 +39,7 @@ func fetchNewFaxes(cfg Config, since time.Time) ([]FaxEntry, error) {
 		return nil, fmt.Errorf("select: %w", err)
 	}
 	if mbox.Messages == 0 {
+		log.Printf("poll: inbox empty")
 		return nil, nil
 	}
 
@@ -52,8 +53,11 @@ func fetchNewFaxes(cfg Config, since time.Time) ([]FaxEntry, error) {
 		return nil, fmt.Errorf("search: %w", err)
 	}
 	if len(uids) == 0 {
+		log.Printf("poll: no new messages")
 		return nil, nil
 	}
+
+	log.Printf("poll: found %d unread message(s)", len(uids))
 
 	seqset := new(imap.SeqSet)
 	seqset.AddNum(uids...)
@@ -75,9 +79,10 @@ func fetchNewFaxes(cfg Config, since time.Time) ([]FaxEntry, error) {
 		if len(msg.Envelope.From) > 0 {
 			from = msg.Envelope.From[0].Address()
 		}
+		subject := msg.Envelope.Subject
 
 		if !senderAllowed(from, cfg.Senders) {
-			log.Printf("ignored sender: %s", from)
+			log.Printf("ignored: %q from %s (sender not whitelisted)", subject, from)
 			continue
 		}
 
@@ -92,7 +97,12 @@ func fetchNewFaxes(cfg Config, since time.Time) ([]FaxEntry, error) {
 			continue
 		}
 
+		if len(atts) == 0 {
+			log.Printf("ignored: %q from %s (no valid attachments)", subject, from)
+		}
+
 		for _, att := range atts {
+			log.Printf("printing: %s from %s (%q)", att.name, from, subject)
 			path := filepath.Join(receivedDir(), att.name)
 			if err := os.WriteFile(path, att.data, 0644); err != nil {
 				log.Printf("write error: %v", err)

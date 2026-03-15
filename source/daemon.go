@@ -75,6 +75,11 @@ func (d *Daemon) poll() {
 	since := d.lastCheck
 	d.mu.Unlock()
 
+	if since.IsZero() {
+		log.Printf("polling: checking all unread emails")
+	} else {
+		log.Printf("polling: checking emails since %s", since.Format("15:04:05"))
+	}
 	entries, err := fetchNewFaxes(cfg, since)
 	if err != nil {
 		log.Printf("poll error: %v", err)
