@@ -1,4 +1,8 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
   font-family: monospace;
@@ -9,7 +13,7 @@ body {
   color: #111;
 }
 
-header { margin-bottom: 1.5rem; }
+header { margin: 1.5rem 0rem; }
 h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
 h2 { font-size: 1.1rem; margin-bottom: 0.75rem; margin-top: 1.5rem; }
 h2:first-child { margin-top: 0; }
@@ -37,7 +41,13 @@ nav { display: flex; gap: 0.25rem; flex-wrap: wrap; }
 .card { margin-bottom: 0.5rem; }
 .card p { margin: 0.3rem 0; }
 
-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+table {
+    width: max-content;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
 th, td { text-align: left; padding: 0.4rem; border-bottom: 1px solid #ddd; }
 th { background: #eee; }
 

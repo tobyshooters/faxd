@@ -54,8 +54,14 @@ func run() {
 
 	d := source.NewDaemon(cfg)
 
-	sub, _ := fs.Sub(webFS, "web")
-	srv := source.StartServer(d, ":7488", sub)
+	var webDir fs.FS
+	if info, err := os.Stat("web"); err == nil && info.IsDir() {
+		log.Println("serving web UI from disk (live reload)")
+		webDir = os.DirFS("web")
+	} else {
+		webDir, _ = fs.Sub(webFS, "web")
+	}
+	srv := source.StartServer(d, ":7488", webDir)
 
 	go d.Start()
 
