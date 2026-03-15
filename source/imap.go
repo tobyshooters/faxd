@@ -22,7 +22,7 @@ type attachment struct {
 	data []byte
 }
 
-func fetchNewFaxes(cfg Config) ([]FaxEntry, error) {
+func fetchNewFaxes(cfg Config, since time.Time) ([]FaxEntry, error) {
 	addr := "imap.gmail.com:993"
 	c, err := client.DialTLS(addr, nil)
 	if err != nil {
@@ -44,6 +44,9 @@ func fetchNewFaxes(cfg Config) ([]FaxEntry, error) {
 
 	criteria := imap.NewSearchCriteria()
 	criteria.WithoutFlags = []string{imap.SeenFlag}
+	if !since.IsZero() {
+		criteria.Since = since
+	}
 	uids, err := c.Search(criteria)
 	if err != nil {
 		return nil, fmt.Errorf("search: %w", err)

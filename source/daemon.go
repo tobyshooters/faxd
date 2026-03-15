@@ -20,13 +20,14 @@ type FaxEntry struct {
 const maxDebugLines = 200
 
 type Daemon struct {
-	mu       sync.Mutex
-	cfg      Config
-	log      []FaxEntry
-	debug    []string
-	running  bool
-	lastFax  time.Time
-	stop     chan struct{}
+	mu        sync.Mutex
+	cfg       Config
+	log       []FaxEntry
+	debug     []string
+	running   bool
+	lastFax   time.Time
+	lastCheck time.Time
+	stop      chan struct{}
 }
 
 func NewDaemon(cfg Config) *Daemon {
@@ -37,6 +38,7 @@ func NewDaemon(cfg Config) *Daemon {
 	log.SetOutput(&logWriter{d})
 	log.SetFlags(log.Ltime)
 	d.loadLog()
+	d.loadState()
 	return d
 }
 
@@ -70,25 +72,29 @@ func (d *Daemon) Shutdown() {
 func (d *Daemon) poll() {
 	d.mu.Lock()
 	cfg := d.cfg
+	since := d.lastCheck
 	d.mu.Unlock()
 
-	entries, err := fetchNewFaxes(cfg)
+	entries, err := fetchNewFaxes(cfg, since)
 	if err != nil {
 		log.Printf("poll error: %v", err)
 		return
 	}
 
-	if len(entries) == 0 {
-		return
-	}
-
+	now := time.Now()
 	d.mu.Lock()
-	d.log = append(d.log, entries...)
-	d.lastFax = entries[len(entries)-1].Time
+	d.lastCheck = now
+	if len(entries) > 0 {
+		d.log = append(d.log, entries...)
+		d.lastFax = entries[len(entries)-1].Time
+	}
 	d.mu.Unlock()
 
-	d.saveLog()
-	log.Printf("received %d fax(es)", len(entries))
+	d.saveState()
+	if len(entries) > 0 {
+		d.saveLog()
+		log.Printf("received %d fax(es)", len(entries))
+	}
 }
 
 func (d *Daemon) Status() (bool, time.Time) {
@@ -164,4 +170,32 @@ func (d *Daemon) saveLog() {
 	d.mu.Unlock()
 	os.MkdirAll(dataDir(), 0755)
 	os.WriteFile(logPath(), data, 0644)
+}
+
+type daemonState struct {
+	LastCheck time.Time `json:"last_check"`
+}
+
+func statePath() string {
+	return filepath.Join(dataDir(), "state.json")
+}
+
+func (d *Daemon) loadState() {
+	data, err := os.ReadFile(statePath())
+	if err != nil {
+		return
+	}
+	var s daemonState
+	if json.Unmarshal(data, &s) == nil {
+		d.lastCheck = s.LastCheck
+	}
+}
+
+func (d *Daemon) saveState() {
+	d.mu.Lock()
+	s := daemonState{LastCheck: d.lastCheck}
+	d.mu.Unlock()
+	data, _ := json.Marshal(s)
+	os.MkdirAll(dataDir(), 0755)
+	os.WriteFile(statePath(), data, 0644)
 }
