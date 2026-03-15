@@ -55,7 +55,7 @@ func run() {
 	d := source.NewDaemon(cfg)
 
 	sub, _ := fs.Sub(webFS, "web")
-	srv := source.StartServer(d, ":8080", sub)
+	srv := source.StartServer(d, ":7488", sub)
 
 	go d.Start()
 

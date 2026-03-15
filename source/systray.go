@@ -52,7 +52,7 @@ func onReady(d *Daemon, icon []byte) {
 		for {
 			select {
 			case <-mOpen.ClickedCh:
-				openBrowser("http://localhost:8080")
+				openBrowser("http://localhost:7488")
 			case <-mQuit.ClickedCh:
 				d.Shutdown()
 				systray.Quit()
