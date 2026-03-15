@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>faxd</title>
+  <link rel="icon" href="/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <h1>faxd</h1>
+    <nav>
+      <button class="tab active" data-tab="dashboard">Dashboard</button>
+      <button class="tab" data-tab="log">Inbox</button>
+      <button class="tab" data-tab="settings">Settings</button>
+      <button class="tab" data-tab="send">Send</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="dashboard" class="page active">
+      <div class="card">
+        <h2>Status</h2>
+        <p>Daemon: <span id="d-running">--</span></p>
+        <p>Last fax: <span id="d-last">--</span></p>
+      </div>
+      <h2>Debug Log</h2>
+      <pre id="debug-log"></pre>
+    </section>
+
+    <section id="log" class="page">
+      <h2>Inbox Log</h2>
+      <table>
+        <thead><tr><th>Sender</th><th>Time</th><th>File</th><th>Status</th></tr></thead>
+        <tbody id="log-body"></tbody>
+      </table>
+    </section>
+
+    <section id="settings" class="page">
+      <h2>Settings</h2>
+      <form id="settings-form">
+        <label>Email <input name="email" type="email" required></label>
+        <label>Password <input name="password" type="password" placeholder="(unchanged if empty)"></label>
+        <label>Poll interval (seconds) <input name="poll" type="number" min="5" value="30"></label>
+        <label>Max attachment MB <input name="maxmb" type="number" min="1" value="20"></label>
+        <label>Allowed extensions <input name="exts" type="text" placeholder=".pdf,.jpg,.png"></label>
+        <label class="checkbox"><input name="monochrome" type="checkbox"> Print monochrome</label>
+        <label>Print scaling % (0 = no scaling) <input name="scaling" type="number" min="0" max="100" value="50"></label>
+        <button type="submit">Save</button>
+      </form>
+
+      <h2>Allowed Senders</h2>
+      <ul id="wl-list"></ul>
+      <div class="row">
+        <input id="wl-input" type="email" placeholder="sender@example.com">
+        <button id="wl-add">Add</button>
+      </div>
+    </section>
+
+    <section id="send" class="page">
+      <h2>Send Fax</h2>
+      <form id="send-form">
+        <label>To <input name="to" type="email" required></label>
+        <label>File <input name="file" type="file" accept=".pdf,.jpg,.jpeg,.png" required></label>
+        <img id="send-preview" hidden>
+        <button type="submit">Send</button>
+      </form>
+      <p id="send-status"></p>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
